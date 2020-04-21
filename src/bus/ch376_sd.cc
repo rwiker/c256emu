@@ -8,11 +8,11 @@
 
 namespace {
 constexpr uint32_t SDCARD_DATA =
-    0xE808;  // (R/W) SDCARD (CH376S) Data PORT_A (A0 = 0)
+    0xE810;  // (R/W) SDCARD (CH376S) Data PORT_A (A0 = 0)
 constexpr uint32_t SDCARD_CMD =
-    0xE809;  // (R/W) SDCARD (CH376S) CMD/STATUS Port (A0 = 1)
+    0xE811;  // (R/W) SDCARD (CH376S) CMD/STATUS Port (A0 = 1)
 constexpr uint32_t SDCARD_STAT =
-    0xE810;  // (R) SDCARD (Bit[0] = CD, Bit[1] = WP)
+    0xE812;  // (R) SDCARD (Bit[0] = CD, Bit[1] = WP)
 
 enum SdCommands {
   GET_IC_VER = 0x01,

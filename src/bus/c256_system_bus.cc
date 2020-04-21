@@ -34,7 +34,7 @@ void C256SystemBus::IoRead(void* context,
   C256SystemBus* self = (C256SystemBus*)context;
   if ((addr & 0xFF0000) == 0xAF0000) {
     addr &= 0xFFFF;
-    if (addr >= 0xE808 && addr <= 0xE810)
+    if (addr >= 0xE810 && addr <= 0xE812)
       *data = self->sd_->ReadByte(addr);
     else if (addr == 0x1060 || addr == 0x1064)
       *data = self->keyboard_->ReadByte(addr);
@@ -59,7 +59,7 @@ void C256SystemBus::IoWrite(void* context,
   C256SystemBus* self = (C256SystemBus*)context;
   if ((addr & 0xFF0000) == 0xAF0000) {
     addr &= 0xFFFF;
-    if (addr >= 0xE808 && addr <= 0xE810)
+    if (addr >= 0xE810 && addr <= 0xE812)
       self->sd_->StoreByte(addr, *data);
     else if (addr == 0x1060 || addr == 0x1064)
       self->keyboard_->StoreByte(addr, *data);
