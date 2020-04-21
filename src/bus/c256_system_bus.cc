@@ -106,7 +106,7 @@ void C256SystemBus::InitBus() {
   }
 
   // Map the various regions
-  Map(0, ram_, 0x200000);
+  Map(0, ram_, 0x400000);
   Map(0xB00000, vicky_->vram(), 0x400000);
   // Map(sysflash.get(), 0xF00000);
   // Map(userflash.get(), 0xF80000);

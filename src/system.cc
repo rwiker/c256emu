@@ -95,10 +95,10 @@ void System::Initialize() {
 }
 
 void System::BootCPU(bool hard_boot) {
-  // Copy Flash bank 18 to Bank 0
-  LOG(INFO) << "Copying flash bank 18 to bank 0...";
+  // Copy Flash bank 38 to Bank 0
+  LOG(INFO) << "Copying flash bank 38 to bank 0...";
   for (int i = 0; i < 1 << 16; i++) {
-    system_bus_->WriteByte(i, system_bus_->ReadByte(0x180000 + i));
+    system_bus_->WriteByte(i, system_bus_->ReadByte(0x380000 + i));
   }
 
   LOG(INFO) << "PowerOn CPU...";
