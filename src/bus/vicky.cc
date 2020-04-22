@@ -286,8 +286,10 @@ void Vicky::StoreByte(uint32_t addr, uint8_t v) {
     return;
   } else if (addr >= kMousePtrGrap0Begin && addr <= kMousePtrGrap0End) {
     mouse_cursor_0_[addr - kMousePtrGrap0Begin] = v;
+    return;
   } else if (addr >= kMousePtrGrap1Begin && addr <= kMousePtrGrap1End) {
     mouse_cursor_1_[addr - kMousePtrGrap1Begin] = v;
+    return;
   }
 
   if (addr == kBitmapCtrlReg) {
