@@ -261,6 +261,9 @@ uint8_t Vicky::ReadByte(uint32_t addr) {
     return v;
   }
 
+  if (addr == 0xe80e) {
+    return 3;			// boot basic
+  }
   LOG(INFO) << "Read from unhandled vicky reg: " << std::hex << addr;
   return 0;
 }
