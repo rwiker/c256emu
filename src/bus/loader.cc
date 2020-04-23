@@ -169,9 +169,13 @@ bool LoadFromIHex(const std::string &filename, SystemBus *system_bus) {
         uint8_t data;
         CHECK(ReadHex(line_stream, &data));
         sum += data;
-        uint32_t addr = page_addr + (address++);
+        uint32_t addr = page_addr + (address);
 
         system_bus->WriteByte(addr, data);
+	if (page_addr == 0x380000) {
+	  system_bus->WriteByte(address, data);
+	}
+	address++;
       }
       uint8_t checksum;
       CHECK(ReadHex(line_stream, &checksum));
