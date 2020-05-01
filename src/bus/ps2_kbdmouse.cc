@@ -230,6 +230,7 @@ constexpr Keybinding keymap[] = {
     {GLFW_KEY_DOWN, 0x50, 0x72, 0x60, true},
     {GLFW_KEY_LEFT, 0x4b, 0x6b, 0x61, true},
     {GLFW_KEY_RIGHT, 0x4d, 0x74, 0x6a, true},
+    {GLFW_KEY_WORLD_1, 0x56, 0x61, 0x13, false},
 };
 
 const Keybinding *translate_key(int key) {
