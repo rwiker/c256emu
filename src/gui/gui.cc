@@ -54,46 +54,35 @@ void pop_front(std::vector<T>& vec)
 GUI::~GUI() { Close(); }
 
 void GUI::Start(int x, int y) {
-  gui_thread_ = std::thread([this, x, y] {
-    {
-      std::lock_guard<std::mutex> lock(gui_mutex_);
+  glfwSetErrorCallback(glfw_error_callback);
+  CHECK(glfwInit());
 
-      glfwSetErrorCallback(glfw_error_callback);
-      CHECK(glfwInit());
+  window_ = glfwCreateWindow(999, 800, "c256emu", nullptr, nullptr);
+  CHECK(window_);
+  glfwSetWindowPos(window_, x, y);
+  glfwMakeContextCurrent(window_);
+  glfwSwapInterval(1); // Enable vsync
+  glfwSetWindowUserPointer(window_, system_);
+  glfwSetWindowCloseCallback(window_, window_close_callback);
 
-      window_ = glfwCreateWindow(999, 800, "c256emu", nullptr, nullptr);
-      CHECK(window_);
-      glfwSetWindowPos(window_, x, y);
-      glfwMakeContextCurrent(window_);
-      glfwSwapInterval(1); // Enable vsync
-      glfwSetWindowUserPointer(window_, system_);
-      glfwSetWindowCloseCallback(window_, window_close_callback);
+  // Setup Dear ImGui context
+  IMGUI_CHECKVERSION();
+  ImGui::CreateContext();
+  io_ = &ImGui::GetIO();
 
-      // Setup Dear ImGui context
-      IMGUI_CHECKVERSION();
-      ImGui::CreateContext();
-      io_ = &ImGui::GetIO();
+  // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable
+  // Keyboard Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+  // // Enable Gamepad Controls
 
-      // io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable
-      // Keyboard Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-      // // Enable Gamepad Controls
+  // Setup Dear ImGui style
+  ImGui::StyleColorsDark();
+  // ImGui::StyleColorsClassic();
 
-      // Setup Dear ImGui style
-      ImGui::StyleColorsDark();
-      // ImGui::StyleColorsClassic();
-
-      // Setup Platform/Renderer bindings
-      ImGui_ImplGlfw_InitForOpenGL(window_, true);
-      ImGui_ImplOpenGL2_Init();
-    }
-    running_ = true;
-    while (running_ && !glfwWindowShouldClose(window_)) {
-      auto refresh_interval =
-          std::chrono::steady_clock::now() + std::chrono::milliseconds(16);
-      Render();
-      std::this_thread::sleep_until(refresh_interval);
-    }
-  });
+  // Setup Platform/Renderer bindings
+  ImGui_ImplGlfw_InitForOpenGL(window_, true);
+  ImGui_ImplOpenGL2_Init();
+  running_ = true;
+  next_render_time_ = std::chrono::steady_clock::now();
 }
 
 void GUI::Close() {
@@ -114,6 +103,11 @@ void GUI::Stop() {
 }
 
 void GUI::Render() {
+  if (! running_ || (std::chrono::steady_clock::now() < next_render_time_)) {
+    return;
+  }
+  next_render_time_ += std::chrono::milliseconds(17);
+
   glfwPollEvents();
 
   ImGui_ImplOpenGL2_NewFrame();

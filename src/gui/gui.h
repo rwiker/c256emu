@@ -19,8 +19,9 @@ public:
   void Start(int x, int y);
   void Stop();
 
- private:
   void Render();
+
+ private:
   void Close();
 
   void DrawProfiler() const;
@@ -36,6 +37,7 @@ public:
   std::thread gui_thread_;
 
   std::atomic_bool running_;
+  std::chrono::time_point<std::chrono::steady_clock> next_render_time_;  
 
   System *system_;
 

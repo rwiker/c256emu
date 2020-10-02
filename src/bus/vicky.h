@@ -34,6 +34,9 @@ class Vicky {
 
   ~Vicky();
 
+  // Create window
+  GLFWwindow *CreateWindow();
+
   // Initialize.
   GLFWwindow *Start();
 

@@ -68,8 +68,13 @@ System::System()
 
 System::~System() = default;
 
-void System::Initialize() {
+void System::CreateWindows()
+{
   glfwInit();
+  system_bus_->vicky()->CreateWindow();
+}
+
+void System::Initialize() {
   LOG(INFO) << "Starting Vicky...";
 
   // Fire up Vicky
@@ -120,6 +125,7 @@ void System::Sys(uint32_t address) {
 DebugInterface *System::GetDebugInterface() { return &debug_; }
 
 void System::DrawNextLine() {
+  gui_->Render();
   system_bus_->vicky()->RenderLine();
 
   bool frame_end = system_bus_->vicky()->is_vertical_end();
