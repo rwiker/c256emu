@@ -132,8 +132,7 @@ void System::DrawNextLine() {
       PerformWatches();
     }
 
-    auto sleep_time = next_frame_clock - frame_clock;
-    std::this_thread::sleep_for(sleep_time);
+    std::this_thread::sleep_until(next_frame_clock);
 
     auto now = std::chrono::high_resolution_clock::now();
     if (current_frame_ % 60 == 0) {
