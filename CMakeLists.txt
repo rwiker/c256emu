@@ -96,7 +96,9 @@ target_include_directories(c256emu PUBLIC
         ./src)
 
 if (WIN32)
-    set(PLATFORM_LIBRARIES})
+    set(PLATFORM_LIBRARIES)
+elseif(APPLE)
+    set(PLATFORM_LIBRARIES)
 else ()
     set(PLATFORM_LIBRARIES pthread rt GL -lstdc++fs)
 endif ()
