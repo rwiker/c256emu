@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.9)
 
 # Enable Hunter package management.
 include("cmake/HunterGate.cmake")
-huntergate(
-        URL "https://github.com/ruslo/hunter/archive/v0.23.188.tar.gz"
-        SHA1 "3bcf0667e771b05946d6a70b88a3e3a568b15452"
+
+HunterGate(
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.288.tar.gz"
+    SHA1 "6c9b2bc606d86ae31f96a62fc68f0a593024815b"
 )
 
 project(c256emu)
@@ -120,8 +121,9 @@ add_dependencies(c256_tests bus retro_cpu_core)
 target_include_directories(c256_tests PUBLIC
         ${GTEST_INCLUDE_DIRS})
 target_link_libraries(c256_tests bus
-        glog::glog gflags GTest::main
-        ${GTEST_MAIN_LIBRARY}
+        glog::glog gflags
+        ${GTEST_MAIN_LIBRARIES}
+	${PLATFORM_LIBRARIES}
         retro_cpu_core
         )
 target_compile_options(c256_tests PUBLIC
