@@ -121,8 +121,7 @@ add_dependencies(c256_tests bus retro_cpu_core)
 target_include_directories(c256_tests PUBLIC
         ${GTEST_INCLUDE_DIRS})
 target_link_libraries(c256_tests bus
-        glog::glog gflags
-        ${GTEST_MAIN_LIBRARIES}
+        glog::glog gflags GTest::gtest_main
 	${PLATFORM_LIBRARIES}
         retro_cpu_core
         )
