@@ -17,7 +17,7 @@
 
 namespace {
 
-constexpr uint8_t kColsPerLine = 128;
+constexpr uint8_t kColsPerLine = 80;
 constexpr uint8_t kTileSize = 16;
 constexpr uint8_t kSpriteSize = 32;
 constexpr uint16_t kTileSetStride = 256;
