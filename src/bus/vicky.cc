@@ -9,7 +9,11 @@
 #include "system.h"
 #include "vicky.h"
 
+#if TARGET_OS_MAC
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
 
 namespace {
 
