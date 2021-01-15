@@ -230,6 +230,7 @@ constexpr Keybinding keymap[] = {
     {GLFW_KEY_DOWN, 0x50, 0x72, 0x60, true},
     {GLFW_KEY_LEFT, 0x4b, 0x6b, 0x61, true},
     {GLFW_KEY_RIGHT, 0x4d, 0x74, 0x6a, true},
+    {GLFW_KEY_WORLD_1, 0x56, 0x61, 0x13, false},
 };
 
 const Keybinding *translate_key(int key) {
@@ -319,6 +320,18 @@ void PS2KbdState::ps2_put_keycode(int keycode) {
     }
   } else {
     ps2_queue(keycode);
+  }
+}
+
+void report_ignored_key(int key, int scancode) {
+  const char* keyname = glfwGetKeyName(key, scancode);
+  if (keyname) {
+    LOG(ERROR) << "ignoring input with glfw key: "
+	       << glfwGetKeyName(key, scancode);
+  }
+  else {
+    LOG(ERROR) << "ignoring input with glfw key: " << key
+	       << "; scancode: " << scancode;
   }
 }
 
@@ -418,8 +431,7 @@ void PS2KbdState::ps2_keyboard_event(int key, int scancode, int action,
         }
         ps2_put_keycode(keycode & 0xff);
       } else {
-        LOG(ERROR) << "ignoring input with glfw key: "
-                   << glfwGetKeyName(key, scancode);
+	report_ignored_key(key, scancode);
       }
     }
   } else if (scancode_set_ == 2) {
@@ -512,8 +524,7 @@ void PS2KbdState::ps2_keyboard_event(int key, int scancode, int action,
         }
         ps2_put_keycode(keycode & 0xff);
       } else {
-        LOG(ERROR) << "ignoring input with glfw key: "
-                   << glfwGetKeyName(key, scancode);
+	report_ignored_key(key, scancode);
       }
     }
   } else if (scancode_set_ == 3) {
@@ -528,8 +539,7 @@ void PS2KbdState::ps2_keyboard_event(int key, int scancode, int action,
       }
       ps2_put_keycode(keycode & 0xff);
     } else {
-      LOG(ERROR) << "ignoring input with glfw key: "
-                 << glfwGetKeyName(key, scancode);
+      report_ignored_key(key, scancode);
     }
   }
 }

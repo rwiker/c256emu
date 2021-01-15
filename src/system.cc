@@ -68,8 +68,13 @@ System::System()
 
 System::~System() = default;
 
-void System::Initialize() {
+void System::CreateWindows()
+{
   glfwInit();
+  system_bus_->vicky()->CreateWindow();
+}
+
+void System::Initialize() {
   LOG(INFO) << "Starting Vicky...";
 
   // Fire up Vicky
@@ -95,12 +100,13 @@ void System::Initialize() {
 }
 
 void System::BootCPU(bool hard_boot) {
-  // Copy Flash bank 18 to Bank 0
-  LOG(INFO) << "Copying flash bank 18 to bank 0...";
+  // Copy Flash bank 38 to Bank 0
+#if 0
+  LOG(INFO) << "Copying flash bank 38 to bank 0...";
   for (int i = 0; i < 1 << 16; i++) {
-    system_bus_->WriteByte(i, system_bus_->ReadByte(0x180000 + i));
+    system_bus_->WriteByte(i, system_bus_->ReadByte(0x380000 + i));
   }
-
+#endif
   LOG(INFO) << "PowerOn CPU...";
   // Lower the reset pin.
 
@@ -119,6 +125,7 @@ void System::Sys(uint32_t address) {
 DebugInterface *System::GetDebugInterface() { return &debug_; }
 
 void System::DrawNextLine() {
+  gui_->Render();
   system_bus_->vicky()->RenderLine();
 
   bool frame_end = system_bus_->vicky()->is_vertical_end();
@@ -131,8 +138,7 @@ void System::DrawNextLine() {
       PerformWatches();
     }
 
-    auto sleep_time = next_frame_clock - frame_clock;
-    std::this_thread::sleep_for(sleep_time);
+    std::this_thread::sleep_until(next_frame_clock);
 
     auto now = std::chrono::high_resolution_clock::now();
     if (current_frame_ % 60 == 0) {

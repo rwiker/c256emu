@@ -31,16 +31,17 @@ TEST_F(MathCoprocessorTest, TestM1) {
 TEST_F(MathCoprocessorTest, TestD0) {
   bus.PokeU16LE(D0_OPERAND_A, 22222);
   bus.PokeU16LE(D0_OPERAND_B, 12345);
-  //  EXPECT_EQ(bus.PeekU32LE(D0_RESULT), 22222/ 12345);
-  EXPECT_EQ(bus.PeekU32LE(D0_REMAINDER), 22222 % 12345);
+
+  EXPECT_EQ(bus.PeekU16LE(D0_RESULT), 22222/ 12345);
+  EXPECT_EQ(bus.PeekU16LE(D0_REMAINDER), 22222 % 12345);
 }
 
 TEST_F(MathCoprocessorTest, TestD1) {
   bus.PokeU16LE(D1_OPERAND_A, 22222);
   bus.PokeU16LE(D1_OPERAND_B, -12345);
 
-  //  EXPECT_EQ(bus.PeekU32LE(D1_RESULT), 22222 / -12345);
-  EXPECT_EQ(bus.PeekU32LE(D1_REMAINDER), 22222 % -12345);
+  EXPECT_EQ(bus.PeekU16LE(D1_RESULT), (uint16_t)(22222 / -12345));
+  EXPECT_EQ(bus.PeekU16LE(D1_REMAINDER), (uint16_t)(22222 % -12345));
 }
 
 TEST_F(MathCoprocessorTest, TestAdd32) {

@@ -164,13 +164,18 @@ bool LoadFromIHex(const std::string &filename, SystemBus *system_bus) {
     if (record_type == 1) { // EOF
       return true;
     } else if (record_type == 0) { // DATA
+
       while (byte_count--) {
         uint8_t data;
         CHECK(ReadHex(line_stream, &data));
         sum += data;
-        uint32_t addr = page_addr + (address++);
+        uint32_t addr = page_addr + (address);
 
         system_bus->WriteByte(addr, data);
+	if (page_addr == 0x380000) {
+	  system_bus->WriteByte(address, data);
+	}
+	address++;
       }
       uint8_t checksum;
       CHECK(ReadHex(line_stream, &checksum));
@@ -179,13 +184,13 @@ bool LoadFromIHex(const std::string &filename, SystemBus *system_bus) {
     } else if (record_type == 4) { // Extended Linear Address
       uint8_t page_addr_hi;
       uint8_t page_addr_lo;
-      if (!ReadHex(line_stream, &page_addr_lo) ||
-          !ReadHex(line_stream, &page_addr_hi)) {
+      if (!ReadHex(line_stream, &page_addr_hi) ||
+          !ReadHex(line_stream, &page_addr_lo)) {
         LOG(ERROR) << "Bad format in " << filename
                    << " (could not read extended linear address)";
         return false;
       }
-      page_addr = (page_addr_hi << 16) | (page_addr_lo << 8);
+      page_addr = (page_addr_hi << 24) | (page_addr_lo << 16);
     }
   }
   return true;

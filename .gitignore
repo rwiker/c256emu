@@ -12,3 +12,8 @@ lib65816.a
 simple-logger/
 .DS_Store
 *~
+_3rdParty
+c256_tests
+c256emu
+imgui.ini
+libbus.a

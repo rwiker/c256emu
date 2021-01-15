@@ -8,18 +8,22 @@ namespace {
 constexpr uint32_t kIntPendingReg0 = 0x0140;
 constexpr uint32_t kIntPendingReg1 = 0x0141;
 constexpr uint32_t kIntPendingReg2 = 0x0142;
+constexpr uint32_t kIntPendingReg3 = 0x0143;
 
 constexpr uint32_t kIntPolReg0 = 0x0144;
 constexpr uint32_t kIntPolReg1 = 0x0145;
 constexpr uint32_t kIntPolReg2 = 0x0146;
+constexpr uint32_t kIntPolReg3 = 0x0143;
 
-constexpr uint32_t kIntEdgeReg0 = 0x0147;
-constexpr uint32_t kIntEdgeReg1 = 0x0148;
-constexpr uint32_t kIntEdgeReg2 = 0x0149;
+constexpr uint32_t kIntEdgeReg0 = 0x0148;
+constexpr uint32_t kIntEdgeReg1 = 0x0149;
+constexpr uint32_t kIntEdgeReg2 = 0x014A;
+constexpr uint32_t kIntEdgeReg3 = 0x014B;
 
 constexpr uint32_t kIntMaskReg0 = 0x014C;
 constexpr uint32_t kIntMaskReg1 = 0x014D;
 constexpr uint32_t kIntMaskReg2 = 0x014E;
+constexpr uint32_t kIntMaskReg3 = 0x014F;
 
 } // namespace
 

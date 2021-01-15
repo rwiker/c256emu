@@ -9,11 +9,15 @@
 #include "system.h"
 #include "vicky.h"
 
+#if TARGET_OS_MAC
+#include <OpenGL/gl.h>
+#else
 #include <GL/gl.h>
+#endif
 
 namespace {
 
-constexpr uint8_t kColsPerLine = 128;
+constexpr uint8_t kColsPerLine = 80;
 constexpr uint8_t kTileSize = 16;
 constexpr uint8_t kSpriteSize = 32;
 constexpr uint16_t kTileSetStride = 256;
@@ -117,11 +121,15 @@ void Vicky::InitPages(Page *vicky_page_start) {
   map(kTileMapsBegin, (uint8_t *)tile_mem_, sizeof(tile_mem_));
 }
 
-GLFWwindow *Vicky::Start() {
+GLFWwindow *Vicky::CreateWindow() {
   window_ =
       glfwCreateWindow(kVickyBitmapWidth * scale_, kVickyBitmapHeight * scale_,
                        "Vicky", nullptr, nullptr);
   CHECK(window_);
+  return window_;
+}
+
+GLFWwindow *Vicky::Start() {
   glfwMakeContextCurrent(window_);
   CHECK_GL;
 
@@ -132,7 +140,7 @@ GLFWwindow *Vicky::Start() {
   CHECK_GL;
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kVickyBitmapWidth, kVickyBitmapHeight,
-               0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, frame_buffer_);
+               0, GL_RGBA, GL_UNSIGNED_BYTE, frame_buffer_);
   CHECK_GL;
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -261,6 +269,9 @@ uint8_t Vicky::ReadByte(uint32_t addr) {
     return v;
   }
 
+  if (addr == 0xe80e) {
+    return 3;			// boot basic
+  }
   LOG(INFO) << "Read from unhandled vicky reg: " << std::hex << addr;
   return 0;
 }
@@ -286,8 +297,10 @@ void Vicky::StoreByte(uint32_t addr, uint8_t v) {
     return;
   } else if (addr >= kMousePtrGrap0Begin && addr <= kMousePtrGrap0End) {
     mouse_cursor_0_[addr - kMousePtrGrap0Begin] = v;
+    return;
   } else if (addr >= kMousePtrGrap1Begin && addr <= kMousePtrGrap1End) {
     mouse_cursor_1_[addr - kMousePtrGrap1Begin] = v;
+    return;
   }
 
   if (addr == kBitmapCtrlReg) {
@@ -490,7 +503,7 @@ void Vicky::RenderLine() {
 
     glEnable(GL_TEXTURE_2D);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kVickyBitmapWidth,
-                    kVickyBitmapHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE,
+                    kVickyBitmapHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                     frame_buffer_);
     CHECK_GL;
 
