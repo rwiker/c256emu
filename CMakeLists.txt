@@ -55,6 +55,7 @@ set(BUS_SOURCES
     src/bus/rtc.cc
     src/bus/vicky.cc
     src/bus/vdma.cc
+    src/bus/float_copro.cc
     src/bus/c256_system_bus.cc
     src/bus/register_utils.cc
     )
@@ -72,6 +73,12 @@ set(BUS_HEADERS
     src/bus/vicky_def.h
     src/bus/vicky.h
     src/bus/vdma.h
+    src/bus/dummy_device.h
+    src/bus/lpc47m10x.h
+    src/bus/sn76489.h
+    src/bus/wm8776.h
+    src/bus/super_io.h
+    src/bus/float_copro.h
     src/bus/c256_system_bus.h
     src/bus/register_utils.h
     )

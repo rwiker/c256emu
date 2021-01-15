@@ -7,6 +7,10 @@
 #include "bus/rtc.h"
 #include "bus/vdma.h"
 #include "bus/vicky.h"
+#include "bus/sn76489.h"
+#include "bus/lpc47m10x.h"
+#include "bus/wm8776.h"
+#include "bus/super_io.h"
 
 C256SystemBus::C256SystemBus(System* sys) {
   math_co_ = std::make_unique<MathCoprocessor>();
@@ -18,6 +22,10 @@ C256SystemBus::C256SystemBus(System* sys) {
   vdma_ = std::make_unique<VDMA>(vicky_->vram(), int_controller_.get());
   rtc_ = std::make_unique<Rtc>();
   sd_ = std::make_unique<CH376SD>(int_controller_.get(), ".");
+  sn76489_ = std::make_unique<SN76489>();
+  lpc47m10x_ = std::make_unique<LPC47M10X>();
+  wm8776_ = std::make_unique<WM8776>();
+  superio_ = std::make_unique<SuperIO>();
   InitBus();
 }
 
@@ -42,6 +50,14 @@ void C256SystemBus::IoRead(void* context,
       *data = self->rtc_->ReadByte(addr);
     else if (addr >= 0x400 && addr <= 0x04ff)
       *data = self->vdma_->ReadByte(addr);
+    else if (addr == 0xf100)
+      *data = self->sn76489_->ReadByte(addr);
+    else if (addr >= 0x1100 && addr < 0x1160)
+      *data = self->lpc47m10x_->ReadByte(addr);
+    else if (addr >= 0xe900 && addr <= 0xe902)
+      *data = self->wm8776_->ReadByte(addr);
+    else if (addr >= 0x1000 && addr <= 0x13ff)
+      *data = self->superio_->ReadByte(addr);
     else
       *data = self->vicky_->ReadByte(addr);
   } else if (addr >= 0x100 && addr < 0x1A0) {
@@ -67,6 +83,14 @@ void C256SystemBus::IoWrite(void* context,
       self->rtc_->StoreByte(addr, *data);
     else if (addr >= 0x400 && addr <= 0x04ff)
       self->vdma_->StoreByte(addr, *data);
+    else if (addr == 0xf100)
+      self->sn76489_->StoreByte(addr, *data);
+    else if (addr >= 0x1100 && addr < 0x1160)
+      self->lpc47m10x_->StoreByte(addr, *data);
+    else if (addr >= 0xe900 && addr <= 0xe902)
+      self->wm8776_->StoreByte(addr, *data);
+    else if (addr >= 0x1000 && addr <= 0x13ff)
+      self->superio_->StoreByte(addr, *data);
     else
       self->vicky_->StoreByte(addr, *data);
   } else if (addr >= 0x100 && addr < 0x1A0) {

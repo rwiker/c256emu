@@ -10,6 +10,10 @@ class CH376SD;
 class InterruptController;
 class System;
 class VDMA;
+class SN76489;
+class LPC47M10X;
+class WM8776;
+class SuperIO;
 
 class C256SystemBus : public SystemBus {
  public:
@@ -40,6 +44,10 @@ class C256SystemBus : public SystemBus {
   std::unique_ptr<I8042> keyboard_;
   std::unique_ptr<Rtc> rtc_;
   std::unique_ptr<CH376SD> sd_;
+  std::unique_ptr<SN76489> sn76489_;
+  std::unique_ptr<LPC47M10X> lpc47m10x_;
+  std::unique_ptr<SuperIO> superio_;
+  std::unique_ptr<WM8776> wm8776_;
   Page pages[4096];
   uint8_t ram_[0x400000];
 };
