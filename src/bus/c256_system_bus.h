@@ -14,6 +14,7 @@ class SN76489;
 class LPC47M10X;
 class WM8776;
 class SuperIO;
+class FloatCoprocessor;
 
 class C256SystemBus : public SystemBus {
  public:
@@ -48,6 +49,7 @@ class C256SystemBus : public SystemBus {
   std::unique_ptr<LPC47M10X> lpc47m10x_;
   std::unique_ptr<SuperIO> superio_;
   std::unique_ptr<WM8776> wm8776_;
+  std::unique_ptr<FloatCoprocessor> float_co_;
   Page pages[4096];
   uint8_t ram_[0x400000];
 };

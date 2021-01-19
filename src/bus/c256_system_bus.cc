@@ -11,6 +11,7 @@
 #include "bus/lpc47m10x.h"
 #include "bus/wm8776.h"
 #include "bus/super_io.h"
+#include "bus/float_copro.h"
 
 C256SystemBus::C256SystemBus(System* sys) {
   math_co_ = std::make_unique<MathCoprocessor>();
@@ -26,6 +27,7 @@ C256SystemBus::C256SystemBus(System* sys) {
   lpc47m10x_ = std::make_unique<LPC47M10X>();
   wm8776_ = std::make_unique<WM8776>();
   superio_ = std::make_unique<SuperIO>();
+  float_co_ = std::make_unique<FloatCoprocessor>();
   InitBus();
 }
 
@@ -58,6 +60,8 @@ void C256SystemBus::IoRead(void* context,
       *data = self->wm8776_->ReadByte(addr);
     else if (addr >= 0x1000 && addr <= 0x13ff)
       *data = self->superio_->ReadByte(addr);
+    else if (addr >= 0xe200 && addr <= 0xe20f)
+      *data = self->float_co_->ReadByte(addr);
     else
       *data = self->vicky_->ReadByte(addr);
   } else if (addr >= 0x100 && addr < 0x1A0) {
@@ -91,6 +95,8 @@ void C256SystemBus::IoWrite(void* context,
       self->wm8776_->StoreByte(addr, *data);
     else if (addr >= 0x1000 && addr <= 0x13ff)
       self->superio_->StoreByte(addr, *data);
+    else if (addr >= 0xe200 && addr <= 0xe20f)
+      self->float_co_->StoreByte(addr, *data);
     else
       self->vicky_->StoreByte(addr, *data);
   } else if (addr >= 0x100 && addr < 0x1A0) {

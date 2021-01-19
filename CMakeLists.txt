@@ -123,7 +123,9 @@ target_link_libraries(c256emu
 
 # Unit tests.
 include(GoogleTest)
-add_executable(c256_tests src/bus/math_copro_test.cc)
+add_executable(c256_tests
+	src/bus/math_copro_test.cc
+	src/bus/float_copro_test.cc)
 add_dependencies(c256_tests bus retro_cpu_core)
 target_include_directories(c256_tests PUBLIC
         ${GTEST_INCLUDE_DIRS})
