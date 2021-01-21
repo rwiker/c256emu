@@ -82,3 +82,24 @@ TEST_F(FloatCoprocessorTest, TestSubFp) {
   EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FP), floatAsUInt32(pi - e));
   EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FIXED), floatAsFixed(pi - e));
 }
+
+TEST_F(FloatCoprocessorTest, TestAddFixed) {
+  const float pi40 = 125.663;
+  bus.WriteByte(FP_MATH_CTRL0, 0x49);
+  bus.WriteByte(FP_MATH_CTRL1, 0x02);
+  bus.PokeU32LE(FP_MATH_INPUT0, floatAsFixed(pi40));
+  bus.PokeU32LE(FP_MATH_INPUT1, floatAsUInt32(0.0));
+  // EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FP), floatAsUInt32(pi40));
+  EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FIXED), floatAsFixed(pi40));
+}
+
+TEST_F(FloatCoprocessorTest, TestZeroRes) {
+  bus.WriteByte(FP_MATH_CTRL0, 0x00);
+  bus.WriteByte(FP_MATH_CTRL1, 0x00);
+  bus.PokeU32LE(FP_MATH_INPUT0, floatAsUInt32(pi));
+  bus.PokeU32LE(FP_MATH_INPUT1, floatAsUInt32(0.0));
+  EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FP), floatAsUInt32(0.0));
+  EXPECT_EQ(bus.PeekU32LE(FP_MATH_OUTPUT_FIXED), floatAsFixed(0.0));
+  EXPECT_EQ(bus.ReadByte(FP_MATH_MULT_STAT) & 0x08, 0x08);
+}
+
