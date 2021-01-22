@@ -9,11 +9,7 @@
 #include "system.h"
 #include "vicky.h"
 
-#if TARGET_OS_MAC
-#include <OpenGL/gl.h>
-#else
 #include <GL/gl.h>
-#endif
 
 namespace {
 
@@ -121,15 +117,11 @@ void Vicky::InitPages(Page *vicky_page_start) {
   map(kTileMapsBegin, (uint8_t *)tile_mem_, sizeof(tile_mem_));
 }
 
-GLFWwindow *Vicky::CreateWindow() {
+GLFWwindow *Vicky::Start() {
   window_ =
       glfwCreateWindow(kVickyBitmapWidth * scale_, kVickyBitmapHeight * scale_,
                        "Vicky", nullptr, nullptr);
   CHECK(window_);
-  return window_;
-}
-
-GLFWwindow *Vicky::Start() {
   glfwMakeContextCurrent(window_);
   CHECK_GL;
 
@@ -140,7 +132,7 @@ GLFWwindow *Vicky::Start() {
   CHECK_GL;
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kVickyBitmapWidth, kVickyBitmapHeight,
-               0, GL_RGBA, GL_UNSIGNED_BYTE, frame_buffer_);
+               0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, frame_buffer_);
   CHECK_GL;
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -503,7 +495,7 @@ void Vicky::RenderLine() {
 
     glEnable(GL_TEXTURE_2D);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kVickyBitmapWidth,
-                    kVickyBitmapHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kVickyBitmapHeight, GL_BGRA_EXT, GL_UNSIGNED_BYTE,
                     frame_buffer_);
     CHECK_GL;
 

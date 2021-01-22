@@ -40,15 +40,18 @@ int main(int argc, char* argv[]) {
   }
   
   Automation* automation = system.automation();
-  system.CreateWindows();
-  system.Initialize();
-  
-  if (!FLAGS_script.empty()) {
-    if (!automation->LoadScript(FLAGS_script)) {
-      LOG(ERROR) << "Could not load automation file: " << FLAGS_script;
+  std::thread run_thread([&system, automation]() {
+    system.Initialize();
+
+    if (!FLAGS_script.empty()) {
+      if (!automation->LoadScript(FLAGS_script)) {
+        LOG(ERROR) << "Could not load automation file: " << FLAGS_script;
+      }
     }
-  }
-  system.Run();
+    system.Run();
+  });
+
+  run_thread.join();
 
   return 0;
 }

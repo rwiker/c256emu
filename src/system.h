@@ -25,7 +25,6 @@ class System {
   System();
   ~System();
 
-  void CreateWindows();
   void Initialize();
 
   // Launch the CPU scheduler.
